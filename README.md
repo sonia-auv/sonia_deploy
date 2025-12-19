@@ -25,12 +25,15 @@
 
 ## Node
 
+* Name: `system_monitor`
 
 ---
 
 ## Registered Topics / Services / Actions
 
-
+| Type             | Name                            | Direction       | Message/Service Type                       | Description                                               |
+| ---------------- | ------------------------------- | ----------------| ------------------------------------------ | --------------------------------------------------------- |
+| Topic            | `/system_monitor/node_status`   | Published       | `system_monitor/node_status`               | Message contains node information                         |
 
 ---
 ## Build Instructions
@@ -46,17 +49,26 @@ source install/setup.bash
 ## Launch Instructions
 
 ### Default launch
+The command launchs the mission server 
 
-
+```bash
+ros2 launch sonia_deploy launch.py
+```
 
 ---
 
 ## Useful ROS 2 Commands
 
+```bash
+ros2 node list
+ros2 node info /system_monitor
+ros2 topic echo /system_monitor/node_status
+ros2 param list /system_monitor
+```
 
 ---
 
 ## References
 
-
+* [sonia_common_ros2](https://github.com/sonia-auv/sonia_common_ros2)
 ---

@@ -1,5 +1,6 @@
 #pragma once
 #include "rclcpp/rclcpp.hpp"
+#include "sonia_common_ros2/msg/node_status.hpp"
 
 namespace sonia_deploy
 {
@@ -10,7 +11,9 @@ namespace sonia_deploy
         ~SystemMonitor() = default; 
 
     private:
+        void processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg);
         
+        rclcpp::Subscription<sonia_common_ros2::msg::NodeStatus>::SharedPtr _lifesign_sub;
         
     };
-}
+} // namespace sonia_deploy
