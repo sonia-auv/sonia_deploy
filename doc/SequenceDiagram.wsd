@@ -3,7 +3,7 @@
 participant SystemMonitor as sys
 
 
--> sys : lifesignCallBack()
+-> sys : processNodeCallback()
 Activate proc
 proc -> proc : imgDetection(const sensor_msgs::msg::Image &msg, Yolo* model) 
 proc -> proc : actualiseDepth()
