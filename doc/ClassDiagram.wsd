@@ -2,11 +2,10 @@
     class main{
         }
     class SystemMonitor{
-        - 
-
+    
         + SystemMonitor()
         + ~SystemMonitor()
-        
+        - proccessNodeStatusCallback(msg : sonia_common_ros::msg::NodeStatus) : void        
 
     }
 @enduml

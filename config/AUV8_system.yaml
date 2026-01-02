@@ -1,4 +1,6 @@
-nodes:
-  Mission_server:
-  dvl_provider:
-  depth_provider:
+/system_monitor:
+  ros__parameters:
+    node_list:
+      - Mission_server
+      - dvl_provider
+      - depth_provider

@@ -6,9 +6,9 @@ int main(int argc, char *argv[])
 {
     rclcpp::init(argc, argv);
 
-    auto system = std::make_shared<sonia_deploy::SystemMonitor>();
+    auto monitor = std::make_shared<sonia_deploy::SystemMonitor>();
 
-    rclcpp::spin(system);
+    rclcpp::spin(monitor);
 
     rclcpp::shutdown();
     return EXIT_SUCCESS;

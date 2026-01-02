@@ -2,25 +2,7 @@
 
 participant SystemMonitor as sys
 
+-> sys : processNodeStatusCallback()
 
--> sys : processNodeCallback()
-Activate proc
-proc -> proc : imgDetection(const sensor_msgs::msg::Image &msg, Yolo* model) 
-proc -> proc : actualiseDepth()
-proc -> yolo : detect(Mat& image,string frameID, sonia_common_ros2::msg::DetectionArray& output)
-Activate yolo
-yolo -> pre : preprocess(Mat& image)
-Activate pre
-deactivate pre
-yolo -> yolo : infer()
-yolo -> yolo : postprocess(sonia_common_ros2::msg::DetectionArray& output)
-yolo --> proc : int
-deactivate yolo
-
-alt _cameraFront
-proc -> proc : getDeepHistogram(int x1, int y1, int x2, int y2)
-proc -> proc : getAngle(int x1, int y1, int x2, int y2, AngleDetection angle)
-end
-<-- sys : sonia_common_ros2
 
 @enduml
