@@ -44,7 +44,7 @@ namespace sonia_deploy
         node.node_name = node_name;
         node.stamp = this->get_clock().get()->now();
         node.state = sonia_common_ros2::msg::NodeStatus::STATE_STOPPED;
-        node.quality = sonia_common_ros2::msg::NodeStatus::LVL_OK;
+        node.quality = sonia_common_ros2::msg::NodeStatus::Q_UNKNOWN;
 
         _map_nodes[node_name] = node;
     }
