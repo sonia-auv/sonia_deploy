@@ -16,12 +16,12 @@ namespace sonia_deploy
         void processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg);
         void publishSystemStatus();
         
-        rclcpp::Subscription<sonia_common_ros2::msg::NodeStatus>::SharedPtr _node_status_sub;
-        rclcpp::Publisher<sonia_common_ros2::msg::SystemStatus>::SharedPtr _system_status_pub;
+        rclcpp::Subscription<sonia_common_ros2::msg::NodeStatus>::SharedPtr _sub_node_status;
+        rclcpp::Publisher<sonia_common_ros2::msg::SystemStatus>::SharedPtr _pub_system_status;
         rclcpp::TimerBase::SharedPtr _timerSystemStatus;
 
-        sonia_common_ros2::msg::SystemStatus _systemStatus;
-        std::vector<std::string> sources;
+        std::unordered_map<std::string, sonia_common_ros2::msg::NodeStatus> _map_nodes;
+        std::vector<std::string> _sources;
         
     };
 } // namespace sonia_deploy
