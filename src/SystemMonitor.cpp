@@ -13,25 +13,33 @@ namespace sonia_deploy
         _pub_system_status = this->create_publisher<sonia_common_ros2::msg::SystemStatus>("/system_monitor/system_status", 1);
 
         _timerSystemStatus = this->create_wall_timer(500ms, std::bind(&SystemMonitor::publishSystemStatus, this));
+
+        for(const auto& name : _sources){
+            initializeNode(name);
+        }
     }
     void SystemMonitor::processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg){
         
         if(std::find(_sources.begin(), _sources.end(), msg.node_name) != _sources.end()){
             _map_nodes[msg.node_name] = msg;
-
-            /*for(const auto& [name, node] : _map_nodes){
-                RCLCPP_INFO(this->get_logger(), "message: %s, quality: %d, state: %d,", name.c_str(), node.quality, node.state);
-            }*/
         }            
     }
 
     void SystemMonitor::publishSystemStatus(){
         sonia_common_ros2::msg::SystemStatus _system_status;
+
         for(const auto& [name, node] : _map_nodes){
             _system_status.nodes.push_back(node);
-        }  
+        }
+        
         RCLCPP_INFO(this->get_logger(), "system_status_size: %d", _system_status.nodes.size());
         _system_status.stamp = this->get_clock().get()->now();
         _pub_system_status->publish(_system_status);
+    }
+
+    void SystemMonitor::initializeNode(const std::string node){
+        _map_nodes[node].stamp = this->get_clock().get()->now();
+        _map_nodes[node].state = sonia_common_ros2::msg::NodeStatus::STATE_STOPPED;
+        _map_nodes[node].quality = sonia_common_ros2::msg::NodeStatus::LVL_OK;
     }
 } //namespace sonia_deploy

@@ -15,6 +15,7 @@ namespace sonia_deploy
     private:
         void processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg);
         void publishSystemStatus();
+        void initializeNode(const std::string node);
         
         rclcpp::Subscription<sonia_common_ros2::msg::NodeStatus>::SharedPtr _sub_node_status;
         rclcpp::Publisher<sonia_common_ros2::msg::SystemStatus>::SharedPtr _pub_system_status;

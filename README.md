@@ -31,9 +31,10 @@ The **SystemMonitor** node is a monitoring tool used to observe, evaluate and sh
 
 ## Registered Topics / Services / Actions
 
-| Type             | Name                            | Direction       | Message/Service Type                       | Description                                               |
-| ---------------- | ------------------------------- | ----------------| ------------------------------------------ | --------------------------------------------------------- |
-| Topic            | `/system_monitor/node_status`   | Published       | `system_monitor/node_status`               | Message contains node information                         |
+| Type             | Name                            | Direction     | Message/Service Type                    | Description                                                   |
+| ---------------- | ------------------------------- | ------------- | --------------------------------------- | ------------------------------------------------------------- |
+| Topic            | `/system_monitor/node_status`   | Subscribed    | `sonia_common_ros2/msg/NodeStatus`      | Message contains stats from a node                            |
+| Topic            | `/system_monitor/system_status` | Published     | `sonia_common_ros2/msg/SystemStatus`    | Message contains a list of all monitored nodes and their stats|
 
 ---
 ## Build Instructions
