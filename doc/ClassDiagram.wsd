@@ -2,10 +2,14 @@
     class main{
         }
     class SystemMonitor{
+        - _sources : std::vector<std::string>
+        - _map_nodes : std::unordered_map<std::string, sonia_common_ros2::msg::NodeStatus>
     
         + SystemMonitor()
         + ~SystemMonitor()
-        - proccessNodeStatusCallback(msg : sonia_common_ros::msg::NodeStatus) : void        
+        - proccessNodeStatusCallback(msg : sonia_common_ros::msg::NodeStatus) : void
+        - publishSystemStatus() : void
+        - initializeNode(node : std::string) : void       
 
     }
 @enduml

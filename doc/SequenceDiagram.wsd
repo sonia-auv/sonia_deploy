@@ -2,7 +2,8 @@
 
 participant SystemMonitor as sys
 
--> sys : processNodeStatusCallback()
-
+-> sys : processNodeStatusCallback(msg : sonia_common_ros::msg::NodeStatus)
+sys -> sys : publishSystemStatus()
+sys -> sys : initializeNode(node: std::string)
 
 @enduml

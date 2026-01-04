@@ -6,6 +6,10 @@
 
 namespace sonia_deploy
 {
+    /**
+     * @class SystemMonitor
+     * @brief Monitors a defined number of ROS2 nodes on the system.
+     */
     class SystemMonitor : public rclcpp::Node
     {
     public:
@@ -13,8 +17,21 @@ namespace sonia_deploy
         ~SystemMonitor() = default; 
 
     private:
+        /**
+         * @brief Process the information retruned from the subscriber about node information.
+         * @param msg The message containing information of a node.
+         */
         void processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg);
+
+        /**
+         * @brief Publishes a summurized status array of all nodes the system monitors.
+         */
         void publishSystemStatus();
+
+        /**
+         * @brief Initializes the status of nodes the system monitors.
+         * @param node The name of the node.
+         */
         void initializeNode(const std::string node);
         
         rclcpp::Subscription<sonia_common_ros2::msg::NodeStatus>::SharedPtr _sub_node_status;
