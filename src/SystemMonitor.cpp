@@ -22,14 +22,18 @@ namespace sonia_deploy
         
         if(std::find(_sources.begin(), _sources.end(), msg.node_name) != _sources.end()){
             _map_nodes[msg.node_name] = msg;
-        }            
+        }
     }
 
     void SystemMonitor::publishSystemStatus(){
         sonia_common_ros2::msg::SystemStatus _system_status;
+        const auto timeout = rclcpp::Duration::from_seconds(2.0);
         const auto temp = _map_nodes;
 
         for(const auto& [name, node] : temp){
+            if((this->get_clock().get()->now()-node.stamp)>timeout){
+                initializeNode(name);
+            }
             _system_status.nodes.push_back(node);
         }
         
