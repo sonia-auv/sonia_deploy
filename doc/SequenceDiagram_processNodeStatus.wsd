@@ -1,4 +1,4 @@
-@startuml
+@startuml Sequence Diagram processNodeStatusCallback
 title Sequence Diagram processNodeStatusCallback
 
 participant SystemMonitor as sys

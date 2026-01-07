@@ -1,4 +1,4 @@
-@startuml 
+@startuml Sequence Diagram publishSystemStatus
 title Sequence Diagram publishSystemStatus
 
 participant SystemMonitor as sys

@@ -30,9 +30,9 @@ namespace sonia_deploy
 
         /**
          * @brief Initializes the status of ROS nodes the system monitors.
-         * @param node The name of the ROS node.
+         * @param node_name The name of the ROS node.
          */
-        void initializeNode(const std::string node);
+        void initializeNode(const std::string node_name);
         
         rclcpp::Subscription<sonia_common_ros2::msg::NodeStatus>::SharedPtr _sub_node_status;
         rclcpp::Publisher<sonia_common_ros2::msg::SystemStatus>::SharedPtr _pub_system_status;
