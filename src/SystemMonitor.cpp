@@ -6,6 +6,7 @@ namespace sonia_deploy
 {
     SystemMonitor::SystemMonitor()
     : Node("system_monitor"){
+
         this->declare_parameter("node_list", rclcpp::PARAMETER_STRING_ARRAY);
         _sources = this->get_parameter("node_list").as_string_array();
 
@@ -21,14 +22,14 @@ namespace sonia_deploy
     void SystemMonitor::processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg){
         
         if(std::find(_sources.begin(), _sources.end(), msg.node_name) != _sources.end()){
-            _map_nodes[msg.node_name] = msg;
+            _mapped_nodes[msg.node_name] = msg;
         }
     }
 
     void SystemMonitor::publishSystemStatus(){
         sonia_common_ros2::msg::SystemStatus _system_status;
         const auto timeout = rclcpp::Duration::from_seconds(2.0);
-        const auto temp = _map_nodes;
+        const auto temp = _mapped_nodes;
 
         for(const auto& [name, node] : temp){
             if((this->get_clock().get()->now()-node.stamp)>timeout){
@@ -50,6 +51,6 @@ namespace sonia_deploy
         node.state = sonia_common_ros2::msg::NodeStatus::STATE_STOPPED;
         node.quality = sonia_common_ros2::msg::NodeStatus::Q_UNKNOWN;
 
-        _map_nodes[node_name] = node;
+        _mapped_nodes[node_name] = node;
     }
 } //namespace sonia_deploy

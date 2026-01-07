@@ -38,7 +38,7 @@ namespace sonia_deploy
         rclcpp::Publisher<sonia_common_ros2::msg::SystemStatus>::SharedPtr _pub_system_status;
         rclcpp::TimerBase::SharedPtr _timerSystemStatus;
 
-        std::unordered_map<std::string, sonia_common_ros2::msg::NodeStatus> _map_nodes;
+        std::unordered_map<std::string, sonia_common_ros2::msg::NodeStatus> _mapped_nodes;
         std::vector<std::string> _sources;
         
     };
