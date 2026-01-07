@@ -18,7 +18,7 @@ def generate_launch_description():
             Node(
                 package = "sonia_deploy",
                 executable = "sonia_deploy",
-                parameters=[config]
+                parameters = [config]
             )
         ]
     )

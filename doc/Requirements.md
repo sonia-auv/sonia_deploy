@@ -5,15 +5,18 @@ The **SystemMonitor** node is a monitoring tool used to observe, evaluate and sh
 ## Requirements
 
 ### requirement 1
-Titre : processNodeStatusCallback··
-PreCondition : Node message from monitored node is received.··
-Post condition : Message is registered in a map of nodes.··
+Titre : processNodeStatusCallback\
+PreCondition : Node message from monitored node is received.\
+Post condition : Message is registered in a map of nodes.\
 
 ### requirement 2
-Titre : publishSystemStatus··
-PreCondition : NA··
-Post condition : publish summarized state of all mapped nodes defined in the config file.··
+Titre : publishSystemStatus\
+PreCondition : NA\
+Post condition : publish summarized state of all mapped nodes defined in the config file.\
 
 ## Functional
 ### Exigence 1
-Every 500ms, publish states all all system nodes.
+Every 500ms, publish node information of all system nodes.
+
+### Exigence 2
+After a 2 second timeout, if there is no updated information from a node, it is initialized.
