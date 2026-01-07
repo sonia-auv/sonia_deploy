@@ -18,7 +18,7 @@ namespace sonia_deploy
 
     private:
         /**
-         * @brief Process the information retruned from the subscriber about node information.
+         * @brief Process information returned by the subscriber about the node's status.
          * @param msg The message containing information of a node.
          */
         void processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg);
@@ -29,8 +29,8 @@ namespace sonia_deploy
         void publishSystemStatus();
 
         /**
-         * @brief Initializes the status of nodes the system monitors.
-         * @param node The name of the node.
+         * @brief Initializes the status of ROS nodes the system monitors.
+         * @param node The name of the ROS node.
          */
         void initializeNode(const std::string node);
         

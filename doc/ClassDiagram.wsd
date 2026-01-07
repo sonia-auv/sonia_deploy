@@ -7,7 +7,7 @@
     
         + SystemMonitor()
         + ~SystemMonitor()
-        - proccessNodeStatusCallback(msg : sonia_common_ros::msg::NodeStatus) : void
+        - proccessNodeStatusCallback(msg : sonia_common_ros2::msg::NodeStatus) : void
         - publishSystemStatus() : void
         - initializeNode(node : std::string) : void       
 

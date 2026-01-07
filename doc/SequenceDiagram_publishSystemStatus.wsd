@@ -1,0 +1,8 @@
+@startuml 
+title Sequence Diagram publishSystemStatus
+
+participant SystemMonitor as sys
+
+-> sys : publishSystemStatus()
+
+@enduml

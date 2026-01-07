@@ -1,7 +1,0 @@
-@startuml template
-
-participant SystemMonitor as sys
-
--> sys : processNodeStatusCallback(msg : sonia_common_ros::msg::NodeStatus)
-
-@enduml
