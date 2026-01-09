@@ -25,10 +25,11 @@ namespace sonia_deploy
     }
     void SystemMonitor::processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg){
         
+        //Register msg from a node in the array of monitored nodes
         if(std::find(_sources.begin(), _sources.end(), msg.node_name) != _sources.end()){
             _mapped_nodes[msg.node_name].recieved_stamp = this->now();
             _mapped_nodes[msg.node_name].node_status = msg;
-
+            
             checkConsistency(msg.node_name);
         }
     }
@@ -38,6 +39,7 @@ namespace sonia_deploy
         const auto timeout = rclcpp::Duration::from_seconds(1.5);
         const auto temp = _mapped_nodes;
 
+        //check if monitored node in the array is being updated, after a timeout, it get initialized
         for(const auto& [name, monitored_node] : temp){
             if(monitored_node.recieved_stamp.nanoseconds() != 0){
                 const auto duration = this->now()-monitored_node.recieved_stamp;
@@ -56,6 +58,7 @@ namespace sonia_deploy
         
         sonia_common_ros2::msg::NodeStatus node;
 
+        //default state of a node in the list of monitored nodes
         node.node_name = node_name;
         node.stamp = this->now();
         node.state = sonia_common_ros2::msg::NodeStatus::STATE_STOPPED;
@@ -65,17 +68,16 @@ namespace sonia_deploy
     }
 
     void SystemMonitor::checkConsistency(const std::string node_name){
-        if(_mapped_nodes[node_name].last_published_stamp.nanoseconds() == 0){
-            return;
-        }
-
-        const auto actual = rclcpp::Time(_mapped_nodes[node_name].node_status.stamp) - _mapped_nodes[node_name].last_published_stamp;
-        const auto tolerance = EXPECTED_RATE*0.2;
+        if(_check_consistency){
+            const auto actual = rclcpp::Time(_mapped_nodes[node_name].node_status.stamp) - _mapped_nodes[node_name].last_published_stamp;
+            const auto tolerance = EXPECTED_RATE*0.2;
         
-        if (actual < (EXPECTED_RATE - tolerance) || actual > EXPECTED_RATE + tolerance){
-            _mapped_nodes[node_name].node_status.quality = sonia_common_ros2::msg::NodeStatus::Q_DEGRADE;
-            _mapped_nodes[node_name].last_published_stamp = _mapped_nodes[node_name].node_status.stamp;
+            //check for consistency of published stamps of msg with a tolorence of 20%
+            if (actual < (EXPECTED_RATE - tolerance) || actual > EXPECTED_RATE + tolerance){
+                _mapped_nodes[node_name].node_status.quality = sonia_common_ros2::msg::NodeStatus::Q_DEGRADE;
+            }            
         }
-        
+        _check_consistency =true;
+        _mapped_nodes[node_name].last_published_stamp = _mapped_nodes[node_name].node_status.stamp;  
     }
 } //namespace sonia_deploy

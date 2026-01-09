@@ -45,7 +45,7 @@ namespace sonia_deploy
         void initializeNode(const std::string node_name);
 
         /**
-         * @brief Checks consistency of rate the node pubishes its status.
+         * @brief Checks consistency of rate the node publishes its status.
          * @param node_name The name of the ROS node.
          */
         void checkConsistency(const std::string node_name);
@@ -56,6 +56,7 @@ namespace sonia_deploy
 
         std::unordered_map<std::string, MonitoredNode> _mapped_nodes;
         std::vector<std::string> _sources;
+        bool _check_consistency = false;
 
         const rclcpp::Duration EXPECTED_RATE = rclcpp::Duration::from_seconds(0.5);
         
