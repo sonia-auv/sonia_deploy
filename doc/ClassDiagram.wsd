@@ -1,7 +1,8 @@
-@startuml template
+@startuml Class Diagram
     class main{
         }
     class SystemMonitor{
+        - _check_consistency : bool
         - _sources : std::vector<std::string>
         - _map_nodes : std::unordered_map<std::string, sonia_common_ros2::msg::NodeStatus>
     
@@ -9,7 +10,13 @@
         + ~SystemMonitor()
         - proccessNodeStatusCallback(msg : sonia_common_ros2::msg::NodeStatus) : void
         - publishSystemStatus() : void
-        - initializeNode(node : std::string) : void       
+        - initializeNode(node_name : std::string) : void
+        - checkConsistency(node_name : std::string) : void       
 
+    }
+    struct MonitoredNode{
+        rclcpp::Time recieved_stamp;
+        rclcpp::Time last_published_stamp;
+        sonia_common_ros2::msg::NodeStatus node_status;
     }
 @enduml
