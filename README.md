@@ -48,6 +48,12 @@ source install/setup.bash
 ---
 
 ## Launch Instructions
+Required environment variables to launch the project
+
+```bash
+export AUV={prototype_identifier}
+```
+replace `{prototype_identifier}` with available options: `AUV8` | `LITE1`.
 
 ### Default launch
 The command launchs the mission server 
