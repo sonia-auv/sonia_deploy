@@ -1,0 +1,9 @@
+/system_monitor:
+  ros__parameters:
+    node_list:
+      - Mission_server
+      - dvl_provider
+      - depth_provider
+      - imu_provider
+      - cam_provider
+      - rs485_provider

@@ -1,0 +1,10 @@
+@startuml Sequence Diagram publishSystemStatus
+title Sequence Diagram publishSystemStatus
+
+participant SystemMonitor as sys
+
+-> sys : publishSystemStatus()
+Activate sys
+sys -> sys : checkConsistency(node_name : std::string)
+
+@enduml
