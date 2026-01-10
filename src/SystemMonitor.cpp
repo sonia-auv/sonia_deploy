@@ -11,7 +11,7 @@ namespace sonia_deploy
         this->declare_parameter("node_list", rclcpp::PARAMETER_STRING_ARRAY);
         _sources = this->get_parameter("node_list").as_string_array();
 
-        //publishers
+        //publisher and subscriber
         _sub_node_status = this->create_subscription<sonia_common_ros2::msg::NodeStatus>("/system_monitor/node_status", 1, std::bind(&SystemMonitor::processNodeStatusCallback,this,_1));
         _pub_system_status = this->create_publisher<sonia_common_ros2::msg::SystemStatus>("/system_monitor/system_status", 1);
 
@@ -36,7 +36,7 @@ namespace sonia_deploy
 
     void SystemMonitor::publishSystemStatus(){
         sonia_common_ros2::msg::SystemStatus _system_status;
-        const auto timeout = rclcpp::Duration::from_seconds(1.5);
+        const auto timeout = rclcpp::Duration::from_seconds(TIMEOUT);
         const auto temp = _mapped_nodes;
 
         //check if monitored node in the array is being updated, after a timeout, it get initialized
@@ -70,7 +70,7 @@ namespace sonia_deploy
     void SystemMonitor::checkConsistency(const std::string node_name){
         if(_check_consistency){
             const auto actual = rclcpp::Time(_mapped_nodes[node_name].node_status.stamp) - _mapped_nodes[node_name].last_published_stamp;
-            const auto tolerance = EXPECTED_RATE*0.2;
+            const auto tolerance = EXPECTED_RATE*TOLERANCE_PERCENTAGE;
         
             //check for consistency of published stamps of msg with a tolorence of 20%
             if (actual < (EXPECTED_RATE - tolerance) || actual > EXPECTED_RATE + tolerance){

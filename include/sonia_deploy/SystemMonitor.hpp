@@ -59,6 +59,8 @@ namespace sonia_deploy
         bool _check_consistency = false;
 
         const rclcpp::Duration EXPECTED_RATE = rclcpp::Duration::from_seconds(0.5);
+        const float TOLERANCE_PERCENTAGE = 0.2;
+        const float TIMEOUT = 1.5;
         
     };
 } // namespace sonia_deploy
