@@ -10,7 +10,7 @@ def generate_launch_description():
         get_package_share_directory("sonia_deploy"), "config", f"{auv}_system.yaml"
     )
     if not os.path.exists(config):
-        raise Exception("Config directory unknown, check AUV env")
+        raise Exception("Config file unknown, check AUV env")
     
     return LaunchDescription(
         [
