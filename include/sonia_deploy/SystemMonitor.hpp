@@ -58,7 +58,7 @@ namespace sonia_deploy
         std::vector<std::string> _sources;
         bool _check_consistency = false;
 
-        const rclcpp::Duration EXPECTED_RATE = rclcpp::Duration::from_seconds(0.5);
+        const rclcpp::Duration EXPECTED_RATE = rclcpp::Duration::from_seconds(0.6);
         const float TOLERANCE_PERCENTAGE = 0.2;
         const float TIMEOUT = 1.5;
         
