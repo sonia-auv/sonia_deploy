@@ -22,6 +22,7 @@ namespace sonia_deploy
         for(const std::string& name : _sources){
             initializeNode(name);
         }
+        
     }
     void SystemMonitor::processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg){
         
@@ -49,7 +50,7 @@ namespace sonia_deploy
 
             _system_status.nodes.push_back(monitored_node.node_status);
         }
-        
+        _system_status.auv = std::getenv("AUV");
         _system_status.stamp = this->now();
         _pub_system_status->publish(_system_status);
     }
