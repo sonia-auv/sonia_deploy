@@ -20,7 +20,7 @@ Post condition : publish summarized information of all mapped nodes defined in t
 An array of monitored nodes is initialized at start with a default state
 
 ### Exigence 2
-Every 500ms, publish system information composed of node status and quality information.
+Every 600ms, publish system information composed of node status and quality information.
 
 ### Exigence 3
 After a 2 second timeout, if there is no updated information from a node, it is initialized.
