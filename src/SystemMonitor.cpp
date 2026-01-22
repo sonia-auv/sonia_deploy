@@ -65,6 +65,7 @@ namespace sonia_deploy
         node.quality = sonia_common_ros2::msg::NodeStatus::Q_UNKNOWN;
 
         _mapped_nodes[node_name].node_status = node;
+        _mapped_nodes[node_name].check_consistency =false;
     }
 
     void SystemMonitor::checkConsistency(const std::string node_name){
