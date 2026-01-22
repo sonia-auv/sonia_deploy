@@ -11,6 +11,7 @@ namespace sonia_deploy
      * @brief A structure of a recieved node from the subscriber and its recieved timestamp
      */
     struct MonitoredNode{
+        bool check_consistency = false;
         rclcpp::Time recieved_stamp;
         rclcpp::Time last_published_stamp;
         sonia_common_ros2::msg::NodeStatus node_status;
@@ -56,7 +57,6 @@ namespace sonia_deploy
 
         std::unordered_map<std::string, MonitoredNode> _mapped_nodes;
         std::vector<std::string> _sources;
-        bool _check_consistency = false;
 
         const rclcpp::Duration EXPECTED_RATE = rclcpp::Duration::from_seconds(0.6);
         const float TOLERANCE_PERCENTAGE = 0.2;
