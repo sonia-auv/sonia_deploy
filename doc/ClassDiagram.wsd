@@ -3,7 +3,6 @@ title Class Diagram
     class main{
         }
     class SystemMonitor{
-        - _check_consistency : bool
         - _sources : std::vector<std::string>
         - _map_nodes : std::unordered_map<std::string, MonitoredNode>
     
@@ -16,6 +15,7 @@ title Class Diagram
 
     }
     struct MonitoredNode{
+        check_consistency : bool
         recieved_stamp : rclcpp::Time
         last_published_stamp : rclcpp::Time
         node_status : sonia_common_ros2::msg::NodeStatus
