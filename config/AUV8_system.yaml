@@ -7,3 +7,6 @@
       - imu_provider
       - cam_provider
       - rs485_provider
+      - proc_control
+      - proc_planner
+      - proc_vision

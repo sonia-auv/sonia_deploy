@@ -65,10 +65,11 @@ namespace sonia_deploy
         node.quality = sonia_common_ros2::msg::NodeStatus::Q_UNKNOWN;
 
         _mapped_nodes[node_name].node_status = node;
+        _mapped_nodes[node_name].check_consistency =false;
     }
 
     void SystemMonitor::checkConsistency(const std::string node_name){
-        if(_check_consistency){
+        if(_mapped_nodes[node_name].check_consistency){
             const auto actual = rclcpp::Time(_mapped_nodes[node_name].node_status.stamp) - _mapped_nodes[node_name].last_published_stamp;
             const auto tolerance = EXPECTED_RATE*TOLERANCE_PERCENTAGE;
         
@@ -77,7 +78,7 @@ namespace sonia_deploy
                 _mapped_nodes[node_name].node_status.quality = sonia_common_ros2::msg::NodeStatus::Q_DEGRADE;
             }            
         }
-        _check_consistency =true;
+        _mapped_nodes[node_name].check_consistency =true;
         _mapped_nodes[node_name].last_published_stamp = _mapped_nodes[node_name].node_status.stamp;  
     }
 } //namespace sonia_deploy

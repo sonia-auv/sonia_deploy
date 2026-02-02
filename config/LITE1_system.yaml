@@ -5,3 +5,6 @@
       - depth_provider
       - imu_provider
       - rs485_provider
+      - proc_planner
+      - proc_vision
+      - proc_control
