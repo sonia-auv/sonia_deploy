@@ -21,7 +21,7 @@ namespace sonia_deploy
     {
         public:
             BagServer();
-            ~BagServer() =default;
+            ~BagServer() = default;
 
         private:
 
