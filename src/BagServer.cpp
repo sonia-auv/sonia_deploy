@@ -6,7 +6,12 @@ namespace sonia_deploy
     BagServer::BagServer() : Node("Bag_recorder")
     {
         save_path = getpwuid(getuid())->pw_dir;
-        save_path.append("/bags/");
+
+        const char *auv = std::getenv("AUV");
+        if(strcmp(auv, "AUV8") == 0 || strcmp(auv, "LITE1") == 0)
+            save_path.append("/ssd/bags/");
+        else
+            save_path.append("/bags/");
 
         bag_service_ = this->create_service<sonia_common_ros2::srv::RecordBagService>(
             "/bag_recorder/record", std::bind(&BagServer::processBag, this, _1, _2));
