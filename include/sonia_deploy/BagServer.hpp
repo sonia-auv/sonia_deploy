@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <pwd.h>
 
+#include <sonia_common_ros2/msg/node_status.hpp>
 #include "sonia_common_ros2/srv/record_bag_service.hpp"
 
 namespace sonia_deploy
@@ -25,14 +26,19 @@ namespace sonia_deploy
 
         private:
 
-            void processBag(const std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Request> request, const std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Response> response);
+            void processBag(const std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Request> request, std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Response> response);
             
             /**
              * @brief Publishes node information of its state and quality.
              */
             void publishStatus();
 
+            sonia_common_ros2::msg::NodeStatus node_status_;
+
+            rclcpp::TimerBase::SharedPtr timer_node_status_;
+
             std::shared_ptr<rosbag2_transport::Recorder> recorder_;
+            rclcpp::Publisher<sonia_common_ros2::msg::NodeStatus>::SharedPtr pub_node_status_;
             rclcpp::Service<sonia_common_ros2::srv::RecordBagService>::SharedPtr bag_service_;
             std::string save_path;
 
