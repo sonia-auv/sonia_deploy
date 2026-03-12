@@ -7,17 +7,14 @@ namespace sonia_deploy
 {
     BagServer::BagServer() : Node("Bag_recorder")
     {
-        save_path = getpwuid(getuid())->pw_dir;
-
-        const char *auv = std::getenv("AUV");
-        if(strcmp(auv, "AUV8") == 0 || strcmp(auv, "LITE1") == 0)
-            save_path.append("/ssd/bags/");
+        std::string path = getpwuid(getuid())->pw_dir;
+        if(std::filesystem::exists(path+"/ssd") && std::filesystem::is_directory(path+"/ssd"))
+            save_path = path+"/ssd/bags/";
         else
-            save_path.append("/bags/");
+            save_path = path+"/bags/";
 
         pub_node_status_ = this->create_publisher<sonia_common_ros2::msg::NodeStatus>("/system_monitor/node_status", 1);
-        bag_service_ = this->create_service<sonia_common_ros2::srv::RecordBagService>(
-            "/bag_recorder/record", std::bind(&BagServer::processBag, this, _1, _2));
+        bag_service_ = this->create_service<sonia_common_ros2::srv::RecordBagService>("/bag_recorder/record", std::bind(&BagServer::processRecordRequest, this, _1, _2));
 
         timer_node_status_ = this->create_wall_timer(500ms, std::bind(&BagServer::publishStatus, this));
 
@@ -28,7 +25,7 @@ namespace sonia_deploy
         RCLCPP_INFO(this->get_logger(), "Bag Server up running");
     }
 
-    void BagServer::processBag(const std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Request> request, std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Response> response)
+    void BagServer::processRecordRequest(const std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Request> request, std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Response> response)
     {
         switch (request->cmd)
         {
@@ -37,6 +34,7 @@ namespace sonia_deploy
                 auto writer = std::make_shared<rosbag2_cpp::Writer>();
                 rosbag2_storage::StorageOptions options;
                 options.uri = save_path + request->filename;
+                filename = request->filename;
                 options.storage_id = "sqlite3";
 
                 rosbag2_transport::RecordOptions record_options;
@@ -68,7 +66,7 @@ namespace sonia_deploy
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_STOP:
             {
                 recorder_->stop();
-                response->state = "Recording stopped";
+                response->state = "Recording stopped, rosbag saved at filename : "+ filename;
 
                 node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
                 break; 
