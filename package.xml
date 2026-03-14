@@ -10,6 +10,8 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
+  <depend>rosbag2_transport</depend>
+  <depend>rosbag2_storage</depend>
   <depend>sonia_common_ros2</depend>
   <depend>std_srvs</depend>
   <depend>std_msgs</depend>

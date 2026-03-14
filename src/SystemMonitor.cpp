@@ -22,12 +22,13 @@ namespace sonia_deploy
         for(const std::string& name : _sources){
             initializeNode(name);
         }
+        RCLCPP_INFO(this->get_logger(), "System monitoring up");
     }
     void SystemMonitor::processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg){
         
         //Register msg from a node in the array of monitored nodes
         if(std::find(_sources.begin(), _sources.end(), msg.node_name) != _sources.end()){
-            _mapped_nodes[msg.node_name].recieved_stamp = this->now();
+            _mapped_nodes[msg.node_name].recieved_stamp = this->now();  
             _mapped_nodes[msg.node_name].node_status = msg;
             
             checkConsistency(msg.node_name);
