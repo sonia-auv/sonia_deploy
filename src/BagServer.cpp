@@ -31,9 +31,14 @@ namespace sonia_deploy
         {
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_START:
             {
+                auto path = save_path + request->filename;
+                if (std::filesystem::exists(path) && std::filesystem::is_directory(path)) {
+                    response->message = "Error!! A bag with the same name already exists";
+                    return;
+                }
                 auto writer = std::make_shared<rosbag2_cpp::Writer>();
                 rosbag2_storage::StorageOptions options;
-                options.uri = save_path + request->filename;
+                options.uri = path;
                 filename = request->filename;
                 options.storage_id = "sqlite3";
 
@@ -45,7 +50,7 @@ namespace sonia_deploy
                 recorder_ = std::make_shared<rosbag2_transport::Recorder>(writer, options, record_options);
 
                 recorder_->record();
-                response->state = "Recording started";
+                response->message = "Recording started";
 
                 node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_RUNNING;
                 break; 
@@ -53,20 +58,20 @@ namespace sonia_deploy
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_PAUSE:
             {
                 recorder_->pause();
-                response->state = "Recording paused";
+                response->message = "Recording paused";
 
                 break; 
             }
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_RESUME:
             {
                 recorder_->resume();
-                response->state = "Recording resumed";
+                response->message = "Recording resumed";
                 break; 
             }
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_STOP:
             {
                 recorder_->stop();
-                response->state = "Recording stopped, rosbag saved at filename : "+ filename;
+                response->message = "Recording stopped, rosbag saved : "+ filename;
 
                 node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
                 break; 

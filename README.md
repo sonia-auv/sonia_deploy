@@ -1,6 +1,7 @@
 # sonia_deploy
 
-The **SystemMonitor** node is a monitoring tool used to observe, evaluate and showcase the operational status of the **ROS2** nodes. The monitored nodes periodically publish their current state and health quality. The tool provides a summarized system health status of all the nodes it monitors. 
+The **SystemMonitor** node is a monitoring tool used to observe, evaluate and showcase the operational status of the **ROS2** nodes. The monitored nodes periodically publish their current state and health quality. The tool provides a summarized system health status of all the nodes it monitors.
+The **BagServer** node is a server handling bag recording of topics available on the system.
 
 ---
 
@@ -16,6 +17,8 @@ The **SystemMonitor** node is a monitoring tool used to observe, evaluate and sh
 * `rclcpp`
 * `std_msgs`
 * `std_srvs`
+* `rosbag2_transport`
+* `rosbag2_storage`
 
 ### Sonia packages
 
@@ -23,20 +26,23 @@ The **SystemMonitor** node is a monitoring tool used to observe, evaluate and sh
 
 ---
 
-## Node
+## Nodes
 
-* Name: `system_monitor`
+* Names: `system_monitor`,
+        `Bag_recorder`
 
 ---
 
 ## Registered Topics / Services / Actions
 
-| Type             | Name                            | Direction     | Message/Service Type                    | Description                                                   |
-| ---------------- | ------------------------------- | ------------- | --------------------------------------- | ------------------------------------------------------------- |
-| Topic            | `/system_monitor/node_status`   | Subscribed    | `sonia_common_ros2/msg/NodeStatus`      | Message contains stats from a node                            |
-| Topic            | `/system_monitor/system_status` | Published     | `sonia_common_ros2/msg/SystemStatus`    | Message contains a list of all monitored nodes and their stats|
+| Type      | Name                            | Direction     | Message/Service Type                    | Description                                             |
+| --------- | ------------------------------- | ------------- | -------------------------------------   | ------------------------------------------------------- |
+| Topic     | `/system_monitor/node_status`   | Subscribed    | `sonia_common_ros2/msg/NodeStatus`      | Message contains stats from a node                      |
+| Topic     | `/system_monitor/system_status` | Published     | `sonia_common_ros2/msg/SystemStatus`    | Message contains a list of all monitored nodes and stats|
+| Service   | `/bag_recorder/record`          | Service Server| `sonia_common_ros2/srv/RecordBagService`| Service handles rosbag recording requests               |
 
 ---
+
 ## Build Instructions
 To build the project, the following commands should be run directly from your ROS2 workspace.
 
