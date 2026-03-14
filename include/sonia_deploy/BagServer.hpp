@@ -1,10 +1,10 @@
 #pragma once
 
-#include "rclcpp/rclcpp.hpp"
+#include <rclcpp/rclcpp.hpp>
 #include <rosbag2_transport/recorder.hpp>
 
 #include <sonia_common_ros2/msg/node_status.hpp>
-#include "sonia_common_ros2/srv/record_bag_service.hpp"
+#include <sonia_common_ros2/srv/record_bag_service.hpp>
 
 namespace sonia_deploy
 {
@@ -40,6 +40,7 @@ namespace sonia_deploy
 
             std::string save_path_;
             std::string filename_;
+            bool is_recording_;
             sonia_common_ros2::msg::NodeStatus node_status_;
 
     };

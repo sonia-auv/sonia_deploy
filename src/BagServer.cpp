@@ -1,9 +1,7 @@
-#include "sonia_deploy/BagServer.hpp"
-
 #include <pwd.h>
-
 #include <chrono>
 #include <filesystem>
+#include <sonia_deploy/BagServer.hpp>
 #include <rosbag2_storage/storage_options.hpp>
 #include <rosbag2_transport/record_options.hpp>
 
@@ -12,10 +10,12 @@ using namespace std::placeholders;
 
 namespace sonia_deploy
 {
-    BagServer::BagServer() : Node("Bag_recorder")
+    BagServer::BagServer() : Node("Bag_recorder"), is_recording_{false}
     {
         std::string path = getpwuid(getuid())->pw_dir;
-        if (std::filesystem::exists(path + "/ssd") && std::filesystem::is_directory(path + "/ssd"))
+        std::string ssd_path = path + "/ssd";
+
+        if (std::filesystem::exists(ssd_path) && std::filesystem::is_directory(ssd_path))
             save_path_ = path + "/ssd/bags/";
         else
             save_path_ = path + "/bags/";
@@ -45,8 +45,13 @@ namespace sonia_deploy
                 if (std::filesystem::exists(path) && std::filesystem::is_directory(path))
                 {
                     response->message = "Error!! A bag with the same name already exists";
-                    return;
+                    break;
                 }
+                if(is_recording_){
+                    RCLCPP_INFO(this->get_logger(), "There is a recording in progress, send CMD to stop before beginning a new one");
+                    break;
+                }
+
                 auto writer = std::make_shared<rosbag2_cpp::Writer>();
                 rosbag2_storage::StorageOptions options;
                 options.uri = path;
@@ -61,6 +66,7 @@ namespace sonia_deploy
                 recorder_ = std::make_shared<rosbag2_transport::Recorder>(writer, options, record_options);
 
                 recorder_->record();
+                is_recording_ = true;
                 response->message = "Recording started";
 
                 node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_RUNNING;
@@ -82,6 +88,7 @@ namespace sonia_deploy
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_STOP:
             {
                 recorder_->stop();
+                is_recording_ = false;
                 response->message = "Recording stopped, rosbag saved : " + filename_;
 
                 node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
