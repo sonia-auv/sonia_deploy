@@ -1,9 +1,9 @@
 #include <pwd.h>
 #include <chrono>
 #include <filesystem>
-#include <sonia_deploy/BagServer.hpp>
 #include <rosbag2_storage/storage_options.hpp>
 #include <rosbag2_transport/record_options.hpp>
+#include <sonia_deploy/BagServer.hpp>
 
 using namespace std::chrono_literals;
 using namespace std::placeholders;
@@ -12,7 +12,13 @@ namespace sonia_deploy
 {
     BagServer::BagServer() : Node("Bag_recorder"), is_recording_{false}
     {
-        std::string path = getpwuid(getuid())->pw_dir;
+        auto pwuid = getpwuid(getuid());
+        if (pwuid == nullptr)
+        {
+            throw std::runtime_error("Can't find HOME directory");
+        }
+
+        std::string path = pwuid->pw_dir;
         std::string ssd_path = path + "/ssd";
 
         if (std::filesystem::exists(ssd_path) && std::filesystem::is_directory(ssd_path))
@@ -47,8 +53,10 @@ namespace sonia_deploy
                     response->message = "Error!! A bag with the same name already exists";
                     break;
                 }
-                if(is_recording_){
-                    RCLCPP_INFO(this->get_logger(), "There is a recording in progress, send CMD to stop before beginning a new one");
+                if (is_recording_)
+                {
+                    RCLCPP_INFO(this->get_logger(),
+                                "There is a recording in progress, send CMD to stop before beginning a new one");
                     break;
                 }
 
