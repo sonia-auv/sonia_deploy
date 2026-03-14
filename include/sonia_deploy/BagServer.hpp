@@ -2,11 +2,6 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include <rosbag2_transport/recorder.hpp>
-#include <rosbag2_transport/record_options.hpp>
-#include <rosbag2_storage/storage_options.hpp>
-#include <chrono>
-#include <filesystem>
-#include <pwd.h>
 
 #include <sonia_common_ros2/msg/node_status.hpp>
 #include "sonia_common_ros2/srv/record_bag_service.hpp"
@@ -43,8 +38,8 @@ namespace sonia_deploy
             rclcpp::Publisher<sonia_common_ros2::msg::NodeStatus>::SharedPtr pub_node_status_;
             rclcpp::Service<sonia_common_ros2::srv::RecordBagService>::SharedPtr bag_service_;
 
-            std::string save_path;
-            std::string filename;
+            std::string save_path_;
+            std::string filename_;
             sonia_common_ros2::msg::NodeStatus node_status_;
 
     };
