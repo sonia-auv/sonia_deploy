@@ -1,4 +1,5 @@
 #include <pwd.h>
+#include <unistd.h>
 #include <chrono>
 #include <filesystem>
 #include <rosbag2_storage/storage_options.hpp>
