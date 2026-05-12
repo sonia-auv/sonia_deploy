@@ -1,6 +1,5 @@
 #include <pwd.h>
 #include <unistd.h>
-#include <chrono>
 #include <filesystem>
 #include <rosbag2_storage/storage_options.hpp>
 #include <rosbag2_transport/record_options.hpp>
@@ -64,7 +63,7 @@ namespace sonia_deploy
                 auto writer = std::make_shared<rosbag2_cpp::Writer>();
                 rosbag2_storage::StorageOptions options;
                 options.uri = path;
-                options.max_bagfile_size = 1000000000;
+                options.max_bagfile_duration = SPLIT_DURATION;
                 filename_ = request->filename;
                 options.storage_id = "mcap";
 
