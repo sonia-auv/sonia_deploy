@@ -2,6 +2,7 @@
   ros__parameters:
     node_list:
       - Mission_server
+      - blackbox_provider
       - depth_provider
       - imu_provider
       - rs485_provider

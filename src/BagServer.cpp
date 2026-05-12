@@ -64,8 +64,9 @@ namespace sonia_deploy
                 auto writer = std::make_shared<rosbag2_cpp::Writer>();
                 rosbag2_storage::StorageOptions options;
                 options.uri = path;
+                options.max_bagfile_size = 1000000000;
                 filename_ = request->filename;
-                options.storage_id = "sqlite3";
+                options.storage_id = "mcap";
 
                 rosbag2_transport::RecordOptions record_options;
                 record_options.all = false;
@@ -85,7 +86,6 @@ namespace sonia_deploy
             {
                 recorder_->pause();
                 response->message = "Recording paused";
-
                 break;
             }
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_RESUME:

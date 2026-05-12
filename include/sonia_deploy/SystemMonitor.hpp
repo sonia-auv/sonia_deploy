@@ -25,7 +25,7 @@ namespace sonia_deploy
     {
     public:
         SystemMonitor();
-        ~SystemMonitor() = default; 
+        ~SystemMonitor() override = default; 
 
     private:
         /**
