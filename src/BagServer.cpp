@@ -39,6 +39,11 @@ namespace sonia_deploy
         RCLCPP_INFO(this->get_logger(), "Bag Server up running");
     }
 
+    void BagServer::setExecutor(std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor)
+    {
+        executor_= executor;
+    }
+
     void BagServer::processRecordRequest(
         const std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Request> request,
         std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Response> response)
@@ -73,6 +78,7 @@ namespace sonia_deploy
                 record_options.rmw_serialization_format = "cdr";
 
                 recorder_ = std::make_shared<rosbag2_transport::Recorder>(writer, options, record_options);
+                executor_->add_node(recorder_);
 
                 recorder_->record();
                 is_recording_ = true;
@@ -83,19 +89,27 @@ namespace sonia_deploy
             }
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_PAUSE:
             {
-                recorder_->pause();
-                response->message = "Recording paused";
+                if(recorder_ && is_recording_){
+                    recorder_->pause();
+                    response->message = "Recording paused";
+                }   
                 break;
             }
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_RESUME:
             {
-                recorder_->resume();
-                response->message = "Recording resumed";
+                if(is_recording_)
+                {
+                    recorder_->resume();
+                    response->message = "Recording resumed";
+                }
                 break;
             }
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_STOP:
             {
-                recorder_->stop();
+                if(is_recording_)
+                    recorder_->stop();
+                    executor_->remove_node(recorder_->get_node_base_interface());
+                    recorder_.reset();
                 is_recording_ = false;
                 response->message = "Recording stopped, rosbag saved : " + filename_;
 
