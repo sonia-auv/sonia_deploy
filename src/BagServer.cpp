@@ -81,7 +81,7 @@ namespace sonia_deploy
 
                 recorder_->record();
 
-                std::this_thread::sleep_for(std::chrono::milliseconds(RECORDER_WAIT)); //sleep to allow recorder to safely complete start 
+                std::this_thread::sleep_for(RECORDER_WAIT); //sleep to allow recorder to safely complete start 
 
                 is_recording_ = true;
                 response->message = "Recording started";
@@ -110,7 +110,7 @@ namespace sonia_deploy
             {
                 if(is_recording_){
                     recorder_->stop();
-                    std::this_thread::sleep_for(std::chrono::milliseconds(RECORDER_WAIT)); //sleep to allow recorder to stop correctly
+                    std::this_thread::sleep_for(RECORDER_WAIT); //sleep to allow recorder to stop correctly
                     executor_->remove_node(recorder_->get_node_base_interface());
                     recorder_.reset();
                     is_recording_ = false;

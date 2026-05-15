@@ -52,8 +52,7 @@ namespace sonia_deploy
             std::atomic<bool> is_recording_;
             sonia_common_ros2::msg::NodeStatus node_status_;
 
-            const uint16_t SPLIT_DURATION = 180; //3 minutes
-            const uint16_t RECORDER_WAIT = 200;
-
+            static constexpr uint16_t SPLIT_DURATION = 3*60; //bag duration per split in minutes
+            static constexpr auto RECORDER_WAIT = std::chrono::milliseconds(200);
     };
 }//namespace sonia_deploy
