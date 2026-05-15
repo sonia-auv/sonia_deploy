@@ -60,8 +60,7 @@ namespace sonia_deploy
                 }
                 if (is_recording_)
                 {
-                    RCLCPP_INFO(this->get_logger(),
-                                "There is a recording in progress, send CMD to stop before beginning a new one");
+                    response->message = "There is a recording in progress, send CMD to stop before beginning a new one";
                     break;
                 }
 
@@ -81,6 +80,9 @@ namespace sonia_deploy
                 executor_->add_node(recorder_);
 
                 recorder_->record();
+
+                std::this_thread::sleep_for(std::chrono::milliseconds(RECORDER_WAIT)); //sleep to allow recorder to safely complete start 
+
                 is_recording_ = true;
                 response->message = "Recording started";
 
@@ -106,14 +108,16 @@ namespace sonia_deploy
             }
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_STOP:
             {
-                if(is_recording_)
+                if(is_recording_){
                     recorder_->stop();
+                    std::this_thread::sleep_for(std::chrono::milliseconds(RECORDER_WAIT)); //sleep to allow recorder to stop correctly
                     executor_->remove_node(recorder_->get_node_base_interface());
                     recorder_.reset();
-                is_recording_ = false;
-                response->message = "Recording stopped, rosbag saved : " + filename_;
+                    is_recording_ = false;
+                    response->message = "Recording stopped, rosbag saved : " + filename_;
 
-                node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
+                    node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
+                } 
                 break;
             }
             default:

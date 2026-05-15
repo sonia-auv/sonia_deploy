@@ -21,6 +21,10 @@ namespace sonia_deploy
             BagServer();
             ~BagServer() override = default;
 
+            /**
+             * @brief Setter to add an internal node to the main multithreadedexecutor.
+             * @param executor Passed executor.
+             */
             void setExecutor(std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor);
 
         private:
@@ -38,7 +42,6 @@ namespace sonia_deploy
 
             std::shared_ptr<rosbag2_transport::Recorder> recorder_;
             std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor_;
-            std::thread recording_thread_;
 
             rclcpp::TimerBase::SharedPtr timer_node_status_;
             rclcpp::Publisher<sonia_common_ros2::msg::NodeStatus>::SharedPtr pub_node_status_;
@@ -50,6 +53,7 @@ namespace sonia_deploy
             sonia_common_ros2::msg::NodeStatus node_status_;
 
             const uint16_t SPLIT_DURATION = 180; //3 minutes
+            const uint16_t RECORDER_WAIT = 200;
 
     };
 }//namespace sonia_deploy
