@@ -1,6 +1,5 @@
 #include <pwd.h>
 #include <unistd.h>
-#include <chrono>
 #include <filesystem>
 #include <rosbag2_storage/storage_options.hpp>
 #include <rosbag2_transport/record_options.hpp>
@@ -40,6 +39,11 @@ namespace sonia_deploy
         RCLCPP_INFO(this->get_logger(), "Bag Server up running");
     }
 
+    void BagServer::setExecutor(std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor)
+    {
+        executor_= executor;
+    }
+
     void BagServer::processRecordRequest(
         const std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Request> request,
         std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Response> response)
@@ -56,16 +60,16 @@ namespace sonia_deploy
                 }
                 if (is_recording_)
                 {
-                    RCLCPP_INFO(this->get_logger(),
-                                "There is a recording in progress, send CMD to stop before beginning a new one");
+                    response->message = "There is a recording in progress, send CMD to stop before beginning a new one";
                     break;
                 }
 
                 auto writer = std::make_shared<rosbag2_cpp::Writer>();
                 rosbag2_storage::StorageOptions options;
                 options.uri = path;
+                options.max_bagfile_duration = SPLIT_DURATION;
                 filename_ = request->filename;
-                options.storage_id = "sqlite3";
+                options.storage_id = "mcap";
 
                 rosbag2_transport::RecordOptions record_options;
                 record_options.all = false;
@@ -73,8 +77,12 @@ namespace sonia_deploy
                 record_options.rmw_serialization_format = "cdr";
 
                 recorder_ = std::make_shared<rosbag2_transport::Recorder>(writer, options, record_options);
+                executor_->add_node(recorder_);
 
                 recorder_->record();
+
+                std::this_thread::sleep_for(RECORDER_WAIT); //sleep to allow recorder to safely complete start 
+
                 is_recording_ = true;
                 response->message = "Recording started";
 
@@ -83,24 +91,33 @@ namespace sonia_deploy
             }
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_PAUSE:
             {
-                recorder_->pause();
-                response->message = "Recording paused";
-
+                if(recorder_ && is_recording_){
+                    recorder_->pause();
+                    response->message = "Recording paused";
+                }   
                 break;
             }
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_RESUME:
             {
-                recorder_->resume();
-                response->message = "Recording resumed";
+                if(is_recording_)
+                {
+                    recorder_->resume();
+                    response->message = "Recording resumed";
+                }
                 break;
             }
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_STOP:
             {
-                recorder_->stop();
-                is_recording_ = false;
-                response->message = "Recording stopped, rosbag saved : " + filename_;
+                if(is_recording_){
+                    recorder_->stop();
+                    std::this_thread::sleep_for(RECORDER_WAIT); //sleep to allow recorder to stop correctly
+                    executor_->remove_node(recorder_->get_node_base_interface());
+                    recorder_.reset();
+                    is_recording_ = false;
+                    response->message = "Recording stopped, rosbag saved : " + filename_;
 
-                node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
+                    node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
+                } 
                 break;
             }
             default:
