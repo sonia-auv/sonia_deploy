@@ -54,5 +54,6 @@ namespace sonia_deploy
 
             static constexpr uint16_t SPLIT_DURATION = 3*60; //bag duration per split in minutes
             static constexpr auto RECORDER_WAIT = std::chrono::milliseconds(200);
+            inline static const std::string RECORDER_NODE_NAME = "bag_recorder"; //custom recorder node name
     };
 }//namespace sonia_deploy

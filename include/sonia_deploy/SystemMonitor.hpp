@@ -23,44 +23,44 @@ namespace sonia_deploy
      */
     class SystemMonitor : public rclcpp::Node
     {
-    public:
-        SystemMonitor();
-        ~SystemMonitor() override = default; 
+        public:
+            SystemMonitor();
+            ~SystemMonitor() override = default; 
 
-    private:
-        /**
-         * @brief Process information returned by the subscriber about the node's status.
-         * @param msg The message containing information of a node.
-         */
-        void processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg);
+        private:
+            /**
+             * @brief Process information returned by the subscriber about the node's status.
+             * @param msg The message containing information of a node.
+             */
+            void processNodeStatusCallback(const sonia_common_ros2::msg::NodeStatus &msg);
 
-        /**
-         * @brief Publishes an array of all nodes the system monitors.
-         */
-        void publishSystemStatus();
+            /**
+             * @brief Publishes an array of all nodes the system monitors.
+             */
+            void publishSystemStatus();
 
-        /**
-         * @brief Initializes the status of ROS nodes the system monitors.
-         * @param node_name The name of the ROS node.
-         */
-        void initializeNode(const std::string node_name);
+            /**
+             * @brief Initializes the status of ROS nodes the system monitors.
+             * @param node_name The name of the ROS node.
+             */
+            void initializeNode(const std::string node_name);
 
-        /**
-         * @brief Checks consistency of rate the node publishes its status.
-         * @param node_name The name of the ROS node.
-         */
-        void checkConsistency(const std::string node_name);
-        
-        rclcpp::Subscription<sonia_common_ros2::msg::NodeStatus>::SharedPtr _sub_node_status;
-        rclcpp::Publisher<sonia_common_ros2::msg::SystemStatus>::SharedPtr _pub_system_status;
-        rclcpp::TimerBase::SharedPtr _timerSystemStatus;
+            /**
+             * @brief Checks consistency of rate the node publishes its status.
+             * @param node_name The name of the ROS node.
+             */
+            void checkConsistency(const std::string node_name);
+            
+            rclcpp::Subscription<sonia_common_ros2::msg::NodeStatus>::SharedPtr _sub_node_status;
+            rclcpp::Publisher<sonia_common_ros2::msg::SystemStatus>::SharedPtr _pub_system_status;
+            rclcpp::TimerBase::SharedPtr _timerSystemStatus;
 
-        std::unordered_map<std::string, MonitoredNode> _mapped_nodes;
-        std::vector<std::string> _sources;
+            std::unordered_map<std::string, MonitoredNode> _mapped_nodes;
+            std::vector<std::string> _sources;
 
-        const rclcpp::Duration EXPECTED_RATE = rclcpp::Duration::from_seconds(0.6);
-        const float TOLERANCE_PERCENTAGE = 0.2;
-        const float TIMEOUT = 2.0;
-        
-    };
+            const rclcpp::Duration EXPECTED_RATE = rclcpp::Duration::from_seconds(0.6);
+            const float TOLERANCE_PERCENTAGE = 0.2;
+            const float TIMEOUT = 2.0;
+            
+        };
 } // namespace sonia_deploy

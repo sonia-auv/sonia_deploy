@@ -28,7 +28,7 @@ The **BagServer** node handles bag recording of topics available on the system. 
 
 ## Nodes
 
-* Names: `system_monitor`,`Bag_recorder`
+* Names: `system_monitor`,`bag_server`
 
 ---
 
@@ -38,7 +38,7 @@ The **BagServer** node handles bag recording of topics available on the system. 
 | --------- | ------------------------------- | ------------- | -------------------------------------   | ------------------------------------------------------- |
 | Topic     | `/system_monitor/node_status`   | Subscribed    | `sonia_common_ros2/msg/NodeStatus`      | Message contains stats from a node                      |
 | Topic     | `/system_monitor/system_status` | Published     | `sonia_common_ros2/msg/SystemStatus`    | Message contains a list of all monitored nodes and stats|
-| Service   | `/bag_recorder/record`          | Service Server| `sonia_common_ros2/srv/RecordBagService`| Service handles rosbag recording requests               |
+| Service   | `/bag_server/record`            | Service Server| `sonia_common_ros2/srv/RecordBagService`| Service handles rosbag recording requests               |
 
 ---
 

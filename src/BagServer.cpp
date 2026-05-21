@@ -10,7 +10,7 @@ using namespace std::placeholders;
 
 namespace sonia_deploy
 {
-    BagServer::BagServer() : Node("Bag_recorder"), is_recording_{false}
+    BagServer::BagServer() : Node("bag_server"), is_recording_{false}
     {
         auto pwuid = getpwuid(getuid());
         if (pwuid == nullptr)
@@ -28,7 +28,7 @@ namespace sonia_deploy
 
         pub_node_status_ = this->create_publisher<sonia_common_ros2::msg::NodeStatus>("/system_monitor/node_status", 1);
         bag_service_ = this->create_service<sonia_common_ros2::srv::RecordBagService>(
-            "/bag_recorder/record", std::bind(&BagServer::processRecordRequest, this, _1, _2));
+            "/bag_server/record", std::bind(&BagServer::processRecordRequest, this, _1, _2));
 
         timer_node_status_ = this->create_wall_timer(500ms, std::bind(&BagServer::publishStatus, this));
 
@@ -52,6 +52,7 @@ namespace sonia_deploy
         {
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_START:
             {
+                size_t active_topics =0;
                 auto path = save_path_ + request->filename;
                 if (std::filesystem::exists(path) && std::filesystem::is_directory(path))
                 {
@@ -76,7 +77,7 @@ namespace sonia_deploy
                 record_options.topics = request->topic_list;
                 record_options.rmw_serialization_format = "cdr";
 
-                recorder_ = std::make_shared<rosbag2_transport::Recorder>(writer, options, record_options);
+                recorder_ = std::make_shared<rosbag2_transport::Recorder>(writer, options, record_options, RECORDER_NODE_NAME);
                 executor_->add_node(recorder_);
 
                 recorder_->record();
@@ -84,7 +85,9 @@ namespace sonia_deploy
                 std::this_thread::sleep_for(RECORDER_WAIT); //sleep to allow recorder to safely complete start 
 
                 is_recording_ = true;
-                response->message = "Recording started";
+                std::ostringstream oss;
+                oss <<"Recording started with " << active_topics<< " active topics";
+                response->message = oss.str();
 
                 node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_RUNNING;
                 break;
