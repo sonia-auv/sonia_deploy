@@ -3,12 +3,12 @@
 #include <filesystem>
 #include <rosbag2_storage/storage_options.hpp>
 #include <rosbag2_transport/record_options.hpp>
-#include <sonia_deploy/BagServer.hpp>
+#include <sonia_monitor/BagServer.hpp>
 
 using namespace std::chrono_literals;
 using namespace std::placeholders;
 
-namespace sonia_deploy
+namespace sonia_monitor
 {
     BagServer::BagServer() : Node("bag_server"), is_recording_{false}
     {
@@ -52,7 +52,7 @@ namespace sonia_deploy
         {
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_START:
             {
-                size_t active_topics =0;
+                size_t active_topics = 0;
                 auto path = save_path_ + request->filename;
                 if (std::filesystem::exists(path) && std::filesystem::is_directory(path))
                 {
@@ -81,6 +81,7 @@ namespace sonia_deploy
                 executor_->add_node(recorder_);
 
                 recorder_->record();
+                active_topics = countRecordedTopics(record_options.topics);
 
                 std::this_thread::sleep_for(RECORDER_WAIT); //sleep to allow recorder to safely complete start 
 
@@ -131,10 +132,25 @@ namespace sonia_deploy
         }
     }
 
+    size_t BagServer::countRecordedTopics(const std::vector<std::string> topics)
+    {
+        size_t counter = 0;
+        for (const auto & topic : topics) {
+            auto infos = recorder_->get_subscriptions_info_by_topic(topic);
+
+            for (const auto & info : infos) {
+                if (!info.node_name().compare(RECORDER_NODE_NAME)) {
+                    counter++;
+                }
+            }
+        } 
+        return counter;       
+    }
+
     void BagServer::publishStatus()
     {
         node_status_.stamp = this->now();
         pub_node_status_->publish(node_status_);
     }
 
-}  // namespace sonia_deploy
+}  // namespace sonia_monitor

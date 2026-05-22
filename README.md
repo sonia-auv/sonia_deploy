@@ -1,4 +1,4 @@
-# sonia_deploy
+# sonia_monitor
 
 The **SystemMonitor** node is a monitoring tool used to observe, evaluate and showcase the operational status of the **ROS2** nodes. The monitored nodes periodically publish their current state and health quality. The tool provides a summarized system health status of all the nodes it monitors.\
 The **BagServer** node handles bag recording of topics available on the system. The recorded bags are saved at the `{HOME_DIR}/ssd/bags/` directory for recordings on the prototypes and `{HOME_DIR}/bags/` for recordings on other systems.
@@ -46,7 +46,7 @@ The **BagServer** node handles bag recording of topics available on the system. 
 To build the project, the following commands should be run directly from your ROS2 workspace.
 
 ```bash
-colcon build --packages-select sonia_deploy --symlink-install
+colcon build --packages-select sonia_monitor --symlink-install
 source install/setup.bash
 ```
 
@@ -64,7 +64,7 @@ replace `{prototype_identifier}` with available options: `AUV8` | `LITE1`.
 The command launchs the mission server 
 
 ```bash
-ros2 launch sonia_deploy launch.py
+ros2 launch sonia_monitor launch.py
 ```
 
 ---

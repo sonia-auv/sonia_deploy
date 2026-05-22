@@ -4,7 +4,7 @@
 #include "sonia_common_ros2/msg/node_status.hpp"
 #include "sonia_common_ros2/msg/system_status.hpp"
 
-namespace sonia_deploy
+namespace sonia_monitor
 {
     /**
      * @struct MonitoredNode
@@ -63,4 +63,4 @@ namespace sonia_deploy
             const float TIMEOUT = 2.0;
             
         };
-} // namespace sonia_deploy
+} // namespace sonia_monitor
