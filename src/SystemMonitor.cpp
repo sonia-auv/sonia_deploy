@@ -1,8 +1,8 @@
-#include "sonia_deploy/SystemMonitor.hpp"
+#include "sonia_monitor/SystemMonitor.hpp"
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
-namespace sonia_deploy
+namespace sonia_monitor
 {
     SystemMonitor::SystemMonitor()
     : Node("system_monitor"){
@@ -82,4 +82,4 @@ namespace sonia_deploy
         _mapped_nodes[node_name].check_consistency =true;
         _mapped_nodes[node_name].last_published_stamp = _mapped_nodes[node_name].node_status.stamp;  
     }
-} //namespace sonia_deploy
+} //namespace sonia_monitor

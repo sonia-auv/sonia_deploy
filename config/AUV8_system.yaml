@@ -11,4 +11,4 @@
       - proc_control
       - proc_planner
       - proc_vision
-      - Bag_recorder
+      - bag_server

@@ -9,4 +9,4 @@
       - proc_planner
       - proc_vision
       - proc_control
-      - Bag_recorder
+      - bag_server

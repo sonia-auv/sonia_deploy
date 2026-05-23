@@ -8,7 +8,7 @@
 #include <sonia_common_ros2/msg/node_status.hpp>
 #include <sonia_common_ros2/srv/record_bag_service.hpp>
 
-namespace sonia_deploy
+namespace sonia_monitor
 {
     
     /**
@@ -36,6 +36,12 @@ namespace sonia_deploy
             void processRecordRequest(const std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Request> request, std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Response> response);
             
             /**
+             * @brief Counts topics that the recorded subscribed to.
+             * @param topics List of topics passed to be recorded.
+             * @return Numder of active topics being recorded.
+             */
+            size_t countRecordedTopics(const std::vector<std::string> topics);
+            /**
              * @brief Publishes node information of its state and quality.
              */
             void publishStatus();
@@ -53,6 +59,7 @@ namespace sonia_deploy
             sonia_common_ros2::msg::NodeStatus node_status_;
 
             static constexpr uint16_t SPLIT_DURATION = 3*60; //bag duration per split in minutes
-            static constexpr auto RECORDER_WAIT = std::chrono::milliseconds(200);
+            static constexpr auto RECORDER_WAIT = std::chrono::milliseconds(150);
+            inline static const std::string RECORDER_NODE_NAME = "bag_recorder"; //custom recorder node name
     };
-}//namespace sonia_deploy
+}//namespace sonia_monitor
