@@ -87,7 +87,7 @@ namespace sonia_monitor
 
                 is_recording_ = true;
                 std::ostringstream oss;
-                oss <<"Recording started with " << active_topics<< " active topics";
+                oss <<"Recording started with " << active_topics << " active topics";
                 response->message = oss.str();
 
                 node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_RUNNING;
@@ -118,7 +118,7 @@ namespace sonia_monitor
                     executor_->remove_node(recorder_->get_node_base_interface());
                     recorder_.reset();
                     is_recording_ = false;
-                    response->message = "Recording stopped, rosbag saved : " + filename_;
+                    response->message = "Recording stopped. The saved rosbag : " + filename_;
 
                     node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
                 } 

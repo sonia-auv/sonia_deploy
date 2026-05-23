@@ -59,7 +59,7 @@ namespace sonia_monitor
             sonia_common_ros2::msg::NodeStatus node_status_;
 
             static constexpr uint16_t SPLIT_DURATION = 3*60; //bag duration per split in minutes
-            static constexpr auto RECORDER_WAIT = std::chrono::milliseconds(200);
+            static constexpr auto RECORDER_WAIT = std::chrono::milliseconds(150);
             inline static const std::string RECORDER_NODE_NAME = "bag_recorder"; //custom recorder node name
     };
 }//namespace sonia_monitor
